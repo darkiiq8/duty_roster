@@ -1,2 +1,2 @@
-# duty_roaster
-disturbute a months shifts equilly  
+# duty_roster
+disturbute a month's shifts equally  
