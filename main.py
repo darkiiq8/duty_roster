@@ -3,7 +3,7 @@ import csv
 import pandas as pd
 import datetime
 from datetime import timedelta
-import calendar  
+import calendar
 from openpyxl import load_workbook
 import copy
 
@@ -53,7 +53,7 @@ class Eframe:
 
 
     def PM(self):
-        global name, PM, index
+        global name, PM, index, selection_counts
         dicval = self.dic_values.copy()
         names_list = self.names.copy()
 
@@ -63,21 +63,27 @@ class Eframe:
         random.shuffle(names_list)
         random.shuffle(names_list)
 
-
-        def round_robin_selection():
-            global index
-            if len(names_list) == 0:
-                print("No names left to choose from!")
-                return None
-
-            selected_name = names_list[index]
-            index = (index + 1) % len(names_list)  # Move to the next name, looping back to the start
-            return selected_name
-
+        selection_counts = {name: 0 for name in names_list}  # Initialize counts to zero
 
         for i in range(len(main_keys)):
-            for _ in range(4):
-                self.PM_dic[main_keys[i]].append(round_robin_selection())
+            k = 0  # Counter to ensure four unique names are added per key
+            while k < 4:
+                # Sort names by the number of times they've been assigned, ascending
+                sorted_names = sorted(selection_counts, key=selection_counts.get)
+
+                sortlen = len(sorted_names)
+                # Attempt to assign the least-used name
+
+                for nam in range(sortlen):
+                    sorted_names = sorted(selection_counts, key=selection_counts.get)
+                    name = sorted_names[nam]
+
+                    # Check for collisions across `AM_dic` and `PM_dic`
+                    if name not in self.PM_dic[main_keys[i]]:
+                        self.PM_dic[main_keys[i]].append(name)  # Add to AM_dic
+                        selection_counts[name] += 1  # Increment the count for this name
+                        k += 1  # Increment unique count for this key
+                        break  # Exit inner loop to move to the next unique position
 
 
         names_list = self.names.copy()
@@ -119,7 +125,6 @@ class Eframe:
             index = (index + 1) % len(names_list)  # Move to the next name, looping back to the start
             return selected_name
 
-        selection_counts = {name: 0 for name in names_list}  # Initialize counts to zero
 
         for i in range(len(main_keys)):
             k = 0  # Counter to ensure four unique names are added per key
@@ -127,14 +132,23 @@ class Eframe:
                 # Sort names by the number of times they've been assigned, ascending
                 sorted_names = sorted(selection_counts, key=selection_counts.get)
 
+                sortlen = len(sorted_names)
                 # Attempt to assign the least-used name
-                for nam in sorted_names:
+
+                for nam in range(sortlen):
+                    sorted_names = sorted(selection_counts, key=selection_counts.get)
+                    name = sorted_names[nam]
+
+
+
                     # Check for collisions across `AM_dic` and `PM_dic`
-                    if nam not in self.AM_dic[main_keys[i]] and nam not in self.PM_dic[main_keys[i]]:
-                        self.AM_dic[main_keys[i]].append(nam)  # Add to AM_dic
-                        selection_counts[nam] += 1  # Increment the count for this name
+                    if name not in self.AM_dic[main_keys[i]] and name not in self.PM_dic[main_keys[i]]:
+                        self.AM_dic[main_keys[i]].append(name)  # Add to AM_dic
+                        selection_counts[name] += 1  # Increment the count for this name
                         k += 1  # Increment unique count for this key
                         break  # Exit inner loop to move to the next unique position
+                print(name)
+                print(selection_counts[name])
 
         names_list = self.names.copy()
 
@@ -216,8 +230,8 @@ class Eframe:
 
 
 
-            if s == 5:
-                print(f"{namess}={s}555555555555")
+            if s == 8:
+                print(f"{namess}={s}5888888888888885")
             else:
                 print(f"{namess}={s}")
 
@@ -253,13 +267,40 @@ with open('names.csv', 'r') as na:# fills names in a list
 
 date = datetime.datetime.now()
 
-
 T = Tframe(date)  # T will fill the necessary list to be able to distribute emps shifts
 T.next_month()
-
 e = Eframe(main_dic, main_keys, names_list)
 e.PM()
 e.AM()
 e.print()
+
 e.count_shifts()
 e.count_days_shifts()
+
+#e.count()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
