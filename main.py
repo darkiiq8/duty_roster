@@ -42,7 +42,6 @@ class Tframe:    # both functions make fill list of targeted time frame with the
 
 
 
-
 class Eframe:
     def __init__(self,main_di, main_di_v, names_list):
         self.dic_values = main_di_v.copy()
@@ -87,8 +86,6 @@ class Eframe:
 
 
         names_list = self.names.copy()
-
-
 
 
         PM = self.PM_dic.copy()
@@ -138,7 +135,6 @@ class Eframe:
                 for nam in range(sortlen):
                     sorted_names = sorted(selection_counts, key=selection_counts.get)
                     name = sorted_names[nam]
-
 
 
                     # Check for collisions across `AM_dic` and `PM_dic`
@@ -248,11 +244,6 @@ class Eframe:
 
 
 
-
-
-
-
-
 main_dic = {}  # each key is a date and contains the names of people who are working on these days
 main_keys = []  # a list of each key easier to handle
 main_keys_days = [] # names of the dates like m for monday
@@ -276,31 +267,3 @@ e.print()
 
 e.count_shifts()
 e.count_days_shifts()
-
-#e.count()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
